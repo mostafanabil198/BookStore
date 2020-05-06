@@ -21,7 +21,15 @@ public class AddBook extends javax.swing.JFrame {
 
     public AddBook(int isbn) {
         this.isbn = isbn;
+        
         initComponents();
+        if(isbn == -1)
+        {
+            updateButton.setVisible(false);
+            seletButton.setVisible(false);
+        } else {
+            addButton.setVisible(false);
+        }
     }
 
     private AddBook() {
@@ -57,9 +65,7 @@ public class AddBook extends javax.swing.JFrame {
         addButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
-        bookIDLabel = new javax.swing.JLabel();
-        idTextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        seletButton = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,13 +135,12 @@ public class AddBook extends javax.swing.JFrame {
 
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
 
-        bookIDLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        bookIDLabel.setText("BOOK_ID :");
-
-        jButton1.setText("SELECT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        seletButton.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        seletButton.setForeground(new java.awt.Color(0, 0, 255));
+        seletButton.setText("SELECT");
+        seletButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                seletButtonActionPerformed(evt);
             }
         });
 
@@ -143,75 +148,67 @@ public class AddBook extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(261, 261, 261)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addGap(71, 71, 71)
+                                            .addComponent(jLabel7)
+                                            .addGap(27, 27, 27)
+                                            .addComponent(categoryTextField))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(44, 44, 44)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel9)
+                                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGap(18, 18, 18))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                    .addComponent(jLabel6)
+                                                    .addGap(27, 27, 27)))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(publicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(priceTextField)
+                                                    .addComponent(copiesTextField)
+                                                    .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(isbnTextField)
+                                            .addComponent(titleTextField)
+                                            .addComponent(publisherTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
+                .addContainerGap(59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(seletButton)
+                .addGap(18, 18, 18)
                 .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(11, 11, 11))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGap(71, 71, 71)
-                                    .addComponent(jLabel7)
-                                    .addGap(27, 27, 27)
-                                    .addComponent(categoryTextField))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(44, 44, 44)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel9)
-                                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(18, 18, 18))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(jLabel6)
-                                            .addGap(27, 27, 27)))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(publicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(priceTextField)
-                                            .addComponent(copiesTextField)
-                                            .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(bookIDLabel))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel1)
-                                    .addComponent(isbnTextField)
-                                    .addComponent(titleTextField)
-                                    .addComponent(publisherTextField)
-                                    .addComponent(idTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)))
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(updateButton)
+                .addGap(144, 144, 144))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bookIDLabel)
-                    .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(25, 25, 25)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(isbnTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -243,13 +240,14 @@ public class AddBook extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addButton))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(updateButton)
+                    .addComponent(seletButton))
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -271,10 +269,6 @@ public class AddBook extends javax.swing.JFrame {
         // TODO add your handling code here:
         Queries q = new Queries();
         String query = "";
-        if (isbn == -1) {
-            updateButton.setVisible(false);
-            bookIDLabel.setVisible(false);
-            idTextField.setVisible(false);
             query = "insert into `BookStore`.`books` (ISBN,`title`,"
                     + "`publisher_name`,publication_year,price,`category`,"
                     + "copies_no,threshold) values("
@@ -287,36 +281,40 @@ public class AddBook extends javax.swing.JFrame {
                     + "'," + Integer.valueOf(copiesTextField.getText())
                     + "," + Integer.valueOf(thresholdTextField.getText()) + ");";
             errorLabel.setText(q.modify(query));
-        } 
+ 
 
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-            Queries q = new Queries();
-            
+        Queries q = new Queries();
+        String q1 = "update `BookStore`.`books` set title = '"+titleTextField.getText()+"',"+
+                "publisher_name = '"+publisherTextField.getText()+"',"+
+                "publication_year = '"+publicationTextField.getText()+"',"+
+                "price = "+priceTextField.getText()+","+
+                "category = '"+categoryTextField.getText()+"',"+
+                "copies_no = "+copiesTextField.getText()+","+
+                "threshold = " + thresholdTextField.getText()+
+                " where isbn =" + isbn + ";";
+        errorLabel.setText(q.modify(q1));
     }//GEN-LAST:event_updateButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void seletButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seletButtonActionPerformed
         // TODO add your handling code here:
         Queries q = new Queries();
-        String query = "select * from books where ISBN = " + idTextField.getText()+";";
-        ResultSet re = q.select(query);
-        try {
-            isbnTextField.setText(""+re.getInt("ISBN"));
-            titleTextField.setText(re.getString("title"));
-            publisherTextField.setText(re.getString("publisher_name"));
-            publicationTextField.setText(re.getString("publication_year"));
-            priceTextField.setText(""+re.getFloat("price"));
-            categoryTextField.setText(re.getString("category"));
-            copiesTextField.setText(""+re.getInt("copies_no"));
-            thresholdTextField.setText(""+re.getInt("threshold"));
-            isbnTextField.setEditable(false);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
+        String query = "select * from books where ISBN = " + isbn+";";
+        Book b = new Book();
+        b = q.select(query);
+        isbnTextField.setText(""+b.isbn);
+        titleTextField.setText(b.titile);
+        publisherTextField.setText(b.publisher);
+        publicationTextField.setText(b.publication);
+        priceTextField.setText(""+b.price);
+        categoryTextField.setText(b.category);
+        copiesTextField.setText(""+b.copies);
+        thresholdTextField.setText(""+b.threshold);
+        isbnTextField.setEditable(false);
+    }//GEN-LAST:event_seletButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,13 +353,10 @@ public class AddBook extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
-    private javax.swing.JLabel bookIDLabel;
     private javax.swing.JTextField categoryTextField;
     private javax.swing.JTextField copiesTextField;
     private javax.swing.JLabel errorLabel;
-    private javax.swing.JTextField idTextField;
     private javax.swing.JTextField isbnTextField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -374,6 +369,7 @@ public class AddBook extends javax.swing.JFrame {
     private javax.swing.JTextField priceTextField;
     private javax.swing.JTextField publicationTextField;
     private javax.swing.JTextField publisherTextField;
+    private javax.swing.JToggleButton seletButton;
     private javax.swing.JTextField thresholdTextField;
     private javax.swing.JTextField titleTextField;
     private javax.swing.JButton updateButton;
