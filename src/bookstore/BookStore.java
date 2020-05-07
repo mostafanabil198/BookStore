@@ -18,8 +18,11 @@ public class BookStore {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        AddBook book = new AddBook(2);
-        book.setVisible(true);
+        AddBook book = new AddBook(1);
+        //book.setVisible(true);
+        //String x[][] = {{"x","q"},{"z","w"}};
+          Search s = new Search();
+          s.setVisible(true);
 
      /*   try {
             // create our mysql database connection

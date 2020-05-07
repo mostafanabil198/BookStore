@@ -5,6 +5,11 @@
  */
 package bookstore;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author mostafanabil198
@@ -34,7 +39,7 @@ public class Search extends javax.swing.JFrame {
         search_field = new javax.swing.JTextField();
         search_btn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        books_table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,7 +88,7 @@ public class Search extends javax.swing.JFrame {
                 .addContainerGap(53, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        books_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -99,9 +104,9 @@ public class Search extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        books_table.setColumnSelectionAllowed(true);
+        jScrollPane1.setViewportView(books_table);
+        books_table.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,7 +152,32 @@ public class Search extends javax.swing.JFrame {
             case "Publisher":
                 query = "SELECT * FROM books WHERE publisher_name like \"%" + search_word + "%\"";
                 break;
+            default:
+                query = "SELECT * FROM books";
+                break;
         }
+        Queries q = new Queries();
+        ArrayList<Book> books = q.select_books(query);
+        System.out.println(books.size());
+        Object[] row = new Object[8];
+        int rows_count = this.books_table.getModel().getRowCount();
+        for(int i = 0; i < rows_count; i++){
+            ((DefaultTableModel)this.books_table.getModel()).removeRow(0);
+        }
+        for(Book b : books){
+            System.out.println(b.getIsbn());
+            row[0] = b.getIsbn();
+            row[1] = b.getTitle();
+            row[2] = b.getPublisher();
+            row[3] = b.getPublication();
+            row[4] = b.getCategory();
+            row[5] = b.getPrice();
+            row[6] = b.getCopies();
+            row[7] = b.getThreshold();
+            ((DefaultTableModel)this.books_table.getModel()).addRow(row);
+        }
+        
+        
     }//GEN-LAST:event_search_btnActionPerformed
 
     /**
@@ -186,11 +216,11 @@ public class Search extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable books_table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton search_btn;
     private javax.swing.JComboBox<String> search_by;
     private javax.swing.JTextField search_field;

@@ -305,14 +305,14 @@ public class AddBook extends javax.swing.JFrame {
         String query = "select * from books where ISBN = " + isbn+";";
         Book b = new Book();
         b = q.select(query);
-        isbnTextField.setText(""+b.isbn);
-        titleTextField.setText(b.titile);
-        publisherTextField.setText(b.publisher);
-        publicationTextField.setText(b.publication);
-        priceTextField.setText(""+b.price);
-        categoryTextField.setText(b.category);
-        copiesTextField.setText(""+b.copies);
-        thresholdTextField.setText(""+b.threshold);
+        isbnTextField.setText(""+b.getIsbn());
+        titleTextField.setText(b.getTitle());
+        publisherTextField.setText(b.getPublisher());
+        publicationTextField.setText(b.getPublication());
+        priceTextField.setText(""+b.getPrice());
+        categoryTextField.setText(b.getCategory());
+        copiesTextField.setText(""+b.getCopies());
+        thresholdTextField.setText(""+b.getThreshold());
         isbnTextField.setEditable(false);
     }//GEN-LAST:event_seletButtonActionPerformed
 
