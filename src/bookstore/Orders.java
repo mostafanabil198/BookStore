@@ -23,7 +23,7 @@ public class Orders extends javax.swing.JFrame {
     }
     
     void showOrders(){
-        Queries q = new Queries();
+        Queries q = Queries.getInstance();
         String query = "SELECT * FROM book_orders";
         ArrayList<BookOrder> books_orders = q.select_books_orders(query);
         System.out.println(books_orders.size());
@@ -143,7 +143,7 @@ public class Orders extends javax.swing.JFrame {
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
          String ISBN= this.orderIsbn.getText();
-          Queries q = new Queries();
+          Queries q = Queries.getInstance();
           String query = "DELETE FROM book_orders WHERE ISBN="+ISBN;
           String error = q.modify(query);
           if(error.isEmpty()){

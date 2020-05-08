@@ -18,7 +18,7 @@ public class BookStore {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        AddBook book = new AddBook(1);
+//        AddBook book = new AddBook(1);
         //book.setVisible(true);
         //String x[][] = {{"x","q"},{"z","w"}};
           Search s = new Search();

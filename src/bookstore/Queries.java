@@ -14,6 +14,33 @@ import java.util.Map;
  * @author elshamey
  */
 public class Queries {
+    
+    private static Queries instance = null;
+    private String username;
+    private boolean manager;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isManager() {
+        return manager;
+    }
+
+    public void setManager(boolean manager) {
+        this.manager = manager;
+    }
+    private Queries(){
+        
+    }
+    
+    public static Queries getInstance(){
+        return instance == null ? new Queries() : instance;
+    }
 
     
     private Connection get_connection() throws ClassNotFoundException, SQLException{
@@ -54,7 +81,7 @@ public class Queries {
             rs = st.executeQuery(query);
             // iterate through the java resultset
             while (rs.next()) {
-                b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
+                b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getInt("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
             }
             st.close();
         } catch (Exception e) {
@@ -75,7 +102,7 @@ public class Queries {
             ResultSet rs = st.executeQuery(query);
             // iterate through the java resultset
             while (rs.next()) {
-                Book b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
+                Book b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getInt("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
                 list.add(b);
             }
             st.close();

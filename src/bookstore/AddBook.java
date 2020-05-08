@@ -267,7 +267,7 @@ public class AddBook extends javax.swing.JFrame {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         // TODO add your handling code here:
-        Queries q = new Queries();
+        Queries q = Queries.getInstance();
         String query = "";
             query = "insert into `BookStore`.`books` (ISBN,`title`,"
                     + "`publisher_name`,publication_year,price,`category`,"
@@ -287,7 +287,7 @@ public class AddBook extends javax.swing.JFrame {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        Queries q = new Queries();
+        Queries q = Queries.getInstance();
         String q1 = "update `BookStore`.`books` set title = '"+titleTextField.getText()+"',"+
                 "publisher_name = '"+publisherTextField.getText()+"',"+
                 "publication_year = '"+publicationTextField.getText()+"',"+
@@ -301,14 +301,14 @@ public class AddBook extends javax.swing.JFrame {
 
     private void seletButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seletButtonActionPerformed
         // TODO add your handling code here:
-        Queries q = new Queries();
+        Queries q = Queries.getInstance();
         String query = "select * from books where ISBN = " + isbn+";";
         Book b = new Book();
         b = q.select(query);
         isbnTextField.setText(""+b.getIsbn());
         titleTextField.setText(b.getTitle());
         publisherTextField.setText(b.getPublisher());
-        publicationTextField.setText(b.getPublication());
+        publicationTextField.setText(String.valueOf(b.getPublication()));
         priceTextField.setText(""+b.getPrice());
         categoryTextField.setText(b.getCategory());
         copiesTextField.setText(""+b.getCopies());

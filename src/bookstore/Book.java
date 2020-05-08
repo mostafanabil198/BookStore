@@ -10,14 +10,14 @@ package bookstore;
  * @author elshamey
  */
 public class Book {
-    private int isbn, copies, threshold;
-    private String title, publication, publisher, category;
+    private int isbn, copies, threshold, publication;
+    private String title, publisher, category;
     private float price;
 
     public Book(){
         
     }
-    public Book(int isbn, String title, String publisher, String publication, String category, int copies, int threshold, float price){
+    public Book(int isbn, String title, String publisher, int publication, String category, int copies, int threshold, float price){
         this.isbn = isbn;
         this.title = title;
         this.publication = publication;
@@ -44,7 +44,7 @@ public class Book {
         return title;
     }
 
-    public String getPublication() {
+    public int getPublication() {
         return publication;
     }
 

@@ -156,7 +156,7 @@ public class Search extends javax.swing.JFrame {
                 query = "SELECT * FROM books";
                 break;
         }
-        Queries q = new Queries();
+        Queries q = Queries.getInstance();
         ArrayList<Book> books = q.select_books(query);
         System.out.println(books.size());
         Object[] row = new Object[8];
