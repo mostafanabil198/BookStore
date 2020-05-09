@@ -120,7 +120,7 @@ public class Checkout extends javax.swing.JFrame {
             query = "START TRANSACTION;SET autocommit = OFF;";
             for(CartItem c : cartItem){
                 query += "UPDATE books SET copies_no = copies_no -" + c.getQuantity() + " WHERE ISBN = " + c.getIsbn() + ";";
-                query += "INSERT INTO sales VALUES(\"" + Queries.getInstance().getUsername() + "\", " + c.getIsbn() + ", " + c.getQuantity() + ", " + dtf.format(now) +", " + c.getQuantity() * c.getPrice() + ");";
+                query += "INSERT INTO sales VALUES(\"" + Queries.getInstance().getUsername() + "\", " + c.getIsbn() + ", " + c.getQuantity() + ", '" + dtf.format(now) +"', " + c.getQuantity() * c.getPrice() + ");";
             }
             query +=  "COMMIT;";
         }

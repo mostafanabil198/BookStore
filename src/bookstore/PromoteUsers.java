@@ -38,6 +38,7 @@ public class PromoteUsers extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         users_promote_table = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        response_msg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +91,7 @@ public class PromoteUsers extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,10 +107,10 @@ public class PromoteUsers extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(promote, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 451, Short.MAX_VALUE)))
+                                .addComponent(promote, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(response_msg, javax.swing.GroupLayout.PREFERRED_SIZE, 718, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 171, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,8 +126,11 @@ public class PromoteUsers extends javax.swing.JFrame {
                     .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search)
                     .addComponent(promote))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(response_msg, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -151,12 +156,19 @@ public class PromoteUsers extends javax.swing.JFrame {
     }//GEN-LAST:event_searchActionPerformed
 
     private void promoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promoteActionPerformed
-        // TODO add your handling code here:
+        String username=this.username.getText();
+        String query = "UPDATE users SET manager = 1 WHERE username="+username;
+        String error= Queries.getInstance().modify(query);
+        if(error.isEmpty()){
+              this.response_msg.setText(error);
+          }else{
+              this.response_msg.setText(username +"became a manager");
+          }
     }//GEN-LAST:event_promoteActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Search s = new Search();
-        this.setVisible(false);
+        this.dispose();
         s.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -201,6 +213,7 @@ public class PromoteUsers extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton promote;
+    private javax.swing.JLabel response_msg;
     private javax.swing.JButton search;
     private javax.swing.JTextField username;
     private javax.swing.JTable users_promote_table;

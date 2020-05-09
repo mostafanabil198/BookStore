@@ -259,7 +259,9 @@ public class Orders extends javax.swing.JFrame {
         String quanitiy= this.QuantityPlace.getText();
          DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
           LocalDateTime now = LocalDateTime.now();
-          String query = "INSERT INTO book_orders VALUES("+ISBN+","+dtf.format(now) +","+quanitiy+")";
+          System.out.println(dtf.format(now));
+          String query = "INSERT INTO book_orders VALUES("+ISBN+",'"+dtf.format(now) +"',"+quanitiy+")";
+          System.out.println(query);
           String error = Queries.getInstance().modify(query);
           if(error.isEmpty()){
               this.response_msg.setText(error);
@@ -267,6 +269,7 @@ public class Orders extends javax.swing.JFrame {
               showOrders();
               this.response_msg.setText("order placed");
           }
+          showOrders();
     }//GEN-LAST:event_PlaceOrderActionPerformed
 
     private void UpdateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateOrderActionPerformed
@@ -274,7 +277,7 @@ public class Orders extends javax.swing.JFrame {
         String quanitiy= this.QuantityPlace.getText();
          DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
           LocalDateTime now = LocalDateTime.now();
-          String query = "UPDATE book_orders SET date="+dtf.format(now) +", set quantity="+quanitiy+"WHERE ISBN="+ISBN;
+          String query = "UPDATE book_orders SET date='"+dtf.format(now) +"', set quantity="+quanitiy+" WHERE ISBN="+ISBN;
           String error = Queries.getInstance().modify(query);
           if(error.isEmpty()){
               this.response_msg.setText(error);
@@ -282,6 +285,7 @@ public class Orders extends javax.swing.JFrame {
               showOrders();
               this.response_msg.setText("order updated");
           }
+          showOrders();
     }//GEN-LAST:event_UpdateOrderActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

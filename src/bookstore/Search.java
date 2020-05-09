@@ -396,7 +396,9 @@ public class Search extends javax.swing.JFrame {
     }//GEN-LAST:event_edit_book_btnActionPerformed
 
     private void user_profileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user_profileMouseClicked
-        
+        EditUser u = new EditUser();
+        this.dispose();
+        u.setVisible(true);
     }//GEN-LAST:event_user_profileMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

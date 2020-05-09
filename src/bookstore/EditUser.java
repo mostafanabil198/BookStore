@@ -15,9 +15,9 @@ public class EditUser extends javax.swing.JFrame {
      * Creates new form EditUser
      */
     int type;
-    public EditUser(int type) {
+    public EditUser() {
         initComponents();
-        this.type = type;
+        this.type = Queries.getInstance().isManager() ? 1 : 0;
         
         Queries q = Queries.getInstance();
         String query = "select * from `BookStore`.`users` where username = "
@@ -30,10 +30,6 @@ public class EditUser extends javax.swing.JFrame {
         passwordTf.setText(u.getPassword());
         phoneTf.setText(u.getPhone());
         addressTf.setText(u.getAddress());
-    }
-
-    private EditUser() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -62,6 +58,7 @@ public class EditUser extends javax.swing.JFrame {
         phoneTf = new javax.swing.JTextField();
         usernameTf = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +95,13 @@ public class EditUser extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel8.setText("Address :");
 
+        jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,7 +109,9 @@ public class EditUser extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(editB)
                 .addGap(34, 34, 34))
             .addGroup(layout.createSequentialGroup()
@@ -155,49 +161,45 @@ public class EditUser extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(usernameTf)
+                        .addComponent(usernameTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel2))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(firstnameTf)
+                        .addComponent(firstnameTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel3))
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lastnameTf)
+                        .addComponent(lastnameTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel4))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(emailTf)
+                        .addComponent(emailTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel5))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(passwordTf)
+                        .addComponent(passwordTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel6))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(phoneTf)
+                        .addComponent(phoneTf, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(addressTf)
+                        .addComponent(addressTf, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
                         .addGap(1, 1, 1))
                     .addComponent(jLabel8))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(editB)
-                    .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -208,20 +210,26 @@ public class EditUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         Queries q = Queries.getInstance();
         String query = "";
-        query = "update `BookStore`.`books` set username = '"+usernameTf.getText()
+        query = "update `BookStore`.`users` set username = '"+usernameTf.getText()
                 +"', email = '"+emailTf.getText()
                 +"', first_name = '"+firstnameTf.getText()
                 +"', last_name = '"+lastnameTf.getText()
                 +"', password = '"+passwordTf.getText()
                 +"', manager = "+type
                 +", phone = '"+phoneTf.getText()
-                +", address = '"+addressTf.getText() + " where "
+                +"', address = '"+addressTf.getText() + "' where "
                 + "username = '"+Queries.getInstance().getUsername()+ "';";
         errorLabel.setText(q.modify(query));
         if(errorLabel.getText() == "")
             Queries.getInstance().setUsername(usernameTf.getText());
 
     }//GEN-LAST:event_editBActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Search s = new Search();
+        this.dispose();
+        s.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -264,6 +272,7 @@ public class EditUser extends javax.swing.JFrame {
     private javax.swing.JTextField emailTf;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField firstnameTf;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
