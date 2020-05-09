@@ -156,5 +156,26 @@ public class Queries {
         }
         return list;
     }
+    public ArrayList<User> select_User_to_promote (String query) {
+        ArrayList<User> list = new ArrayList<>();
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                User order = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"),rs.getString("second_name"));
+                list.add(order);
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
 
 }
