@@ -112,6 +112,29 @@ public class Queries {
         }
         return list;
     }
+    
+    public ArrayList<CartItem> select_cart(String query) {
+        ArrayList<CartItem> list = new ArrayList<>();
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                CartItem b = new CartItem(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("category"), rs.getInt("copies_no"), rs.getFloat("price"), rs.getInt("quantity"));
+                list.add(b);
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
+    
     public ArrayList<BookOrder> select_books_orders(String query) {
         ArrayList<BookOrder> list = new ArrayList<>();
         try {
