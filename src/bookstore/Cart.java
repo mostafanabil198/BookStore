@@ -22,11 +22,11 @@ public class Cart extends javax.swing.JFrame {
         fillCart();
         this.error_lbl.setText("");
     }
-    
+    ArrayList<CartItem> books;
     private void fillCart(){
         String query = "SELECT b.ISBN, b.title, b.publisher_name, b.price, b.copies_no, c.quantity FROM books AS b NATURAL JOIN carts AS c WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
         Queries q = Queries.getInstance();
-        ArrayList<CartItem> books = q.select_cart(query);
+        books = q.select_cart(query);
         Object[] row = new Object[7];
         int rows_count = this.books_table.getModel().getRowCount();
         for(int i = 0; i < rows_count; i++){
@@ -66,6 +66,7 @@ public class Cart extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         total_price_lbl = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,6 +143,13 @@ public class Cart extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Checkout");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,6 +171,8 @@ public class Cart extends javax.swing.JFrame {
                                 .addComponent(total_price_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(448, 448, 448))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(61, 61, 61))))))
         );
@@ -178,7 +188,9 @@ public class Cart extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(total_price_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
                 .addGap(25, 25, 25)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -196,9 +208,15 @@ public class Cart extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Search s = new Search();
-        this.setVisible(false);
+        this.dispose();
         s.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         Checkout c = new Checkout(books);
+         c.setVisible(true);
+         this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,6 +258,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JTable books_table;
     private javax.swing.JLabel error_lbl;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

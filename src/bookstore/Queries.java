@@ -39,7 +39,10 @@ public class Queries {
     }
     
     public static Queries getInstance(){
-        return instance == null ? new Queries() : instance;
+        if (instance == null){
+            instance = new Queries();
+        }
+        return instance;
     }
 
     
@@ -169,6 +172,109 @@ public class Queries {
             while (rs.next()) {
                 User order = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"),rs.getString("second_name"));
                 list.add(order);
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
+    
+    public boolean checkCreditCard(String query){
+        boolean valid = false;
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                valid = true;
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return valid;
+    }
+    
+    public boolean checkout(String query) {
+        boolean rs = false;
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            rs = st.execute(query);
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return rs;
+    }
+
+    public float get_total_sales(String query){
+        float total = 0;
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                total = rs.getFloat("SUM(quantity)");
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return total;
+    }
+    
+    public ArrayList<String> get_best_customers(String query) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                String s = rs.getString("username");
+                list.add(s);
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
+    
+    public ArrayList<String> get_best_books(String query) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                String s = rs.getString("title");
+                list.add(s);
             }
             st.close();
         } catch (Exception e) {
