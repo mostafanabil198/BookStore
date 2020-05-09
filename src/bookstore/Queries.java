@@ -50,7 +50,7 @@ public class Queries {
         String myDriver = "org.gjt.mm.mysql.Driver";
         String myUrl = "jdbc:mysql://localhost/BookStore";
         Class.forName("org.gjt.mm.mysql.Driver");
-        Connection con = DriverManager.getConnection(myUrl, "root", "password");
+        Connection con = DriverManager.getConnection(myUrl, "root", "alahly1907mohamed");
         return con;
     }
 
@@ -92,6 +92,29 @@ public class Queries {
             System.err.println(e.getMessage());
         }
         return b;
+    }
+    
+    
+    public User selectUser(String query) {
+        ResultSet rs = null;
+        User u = null;
+        try {
+            // create our mysql database connection
+            Connection conn = get_connection();
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                u = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("password"), rs.getInt("manager"), rs.getString("phone"), rs.getString("address"));
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return u;
     }
     
     public ArrayList<Book> select_books(String query) {

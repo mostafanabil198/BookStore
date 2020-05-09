@@ -21,8 +21,13 @@ public class BookStore {
 //        AddBook book = new AddBook(1);
         //book.setVisible(true);
         //String x[][] = {{"x","q"},{"z","w"}};
-          Search s = new Search();
-          s.setVisible(true);
+          //Search s = new Search();
+          //s.setVisible(true);
+        First f =new First();
+        f.setVisible(true);
+        
+            //EditUser e = new EditUser(0);
+            //e.setVisible(true);
 
      /*   try {
             // create our mysql database connection
