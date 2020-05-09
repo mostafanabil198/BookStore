@@ -21,7 +21,7 @@ public class User {
        this.phone=phone;
     }
     
-    public void UserOnPromote(String userName,String email,String firstName,String secondName){
+    public User(String userName,String email,String firstName,String secondName){
        this. userName=userName;
        this.email=email;
        this. firstName=firstName;
