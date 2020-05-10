@@ -5,6 +5,10 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author elshamey
@@ -15,7 +19,7 @@ public class EditUser extends javax.swing.JFrame {
      * Creates new form EditUser
      */
     int type;
-    public EditUser() {
+    public EditUser() throws SQLException, ClassNotFoundException {
         initComponents();
         this.type = Queries.getInstance().isManager() ? 1 : 0;
         
@@ -207,21 +211,27 @@ public class EditUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String query = "";
-        query = "update `BookStore`.`users` set username = '"+usernameTf.getText()
-                +"', email = '"+emailTf.getText()
-                +"', first_name = '"+firstnameTf.getText()
-                +"', last_name = '"+lastnameTf.getText()
-                +"', password = '"+passwordTf.getText()
-                +"', manager = "+type
-                +", phone = '"+phoneTf.getText()
-                +"', address = '"+addressTf.getText() + "' where "
-                + "username = '"+Queries.getInstance().getUsername()+ "';";
-        errorLabel.setText(q.modify(query));
-        if(errorLabel.getText() == "")
-            Queries.getInstance().setUsername(usernameTf.getText());
+        try {
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String query = "";
+            query = "update `BookStore`.`users` set username = '"+usernameTf.getText()
+                    +"', email = '"+emailTf.getText()
+                    +"', first_name = '"+firstnameTf.getText()
+                    +"', last_name = '"+lastnameTf.getText()
+                    +"', password = '"+passwordTf.getText()
+                    +"', manager = "+type
+                    +", phone = '"+phoneTf.getText()
+                    +"', address = '"+addressTf.getText() + "' where "
+                    + "username = '"+Queries.getInstance().getUsername()+ "';";
+            errorLabel.setText(q.modify(query));
+            if(errorLabel.getText() == "")
+                Queries.getInstance().setUsername(usernameTf.getText());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_editBActionPerformed
 
@@ -261,7 +271,13 @@ public class EditUser extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditUser().setVisible(true);
+                try {
+                    new EditUser().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

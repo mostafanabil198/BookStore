@@ -6,7 +6,10 @@
 package bookstore;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -20,12 +23,18 @@ public class Search extends javax.swing.JFrame {
      * Creates new form Search
      */
     public Search() {
-        initComponents();
-        user_profile.setText(Queries.getInstance().getUsername());
-        manager_panel.setVisible(Queries.getInstance().isManager());
-        edit_book_lbl.setVisible(Queries.getInstance().isManager());
-        edit_book_btn.setVisible(Queries.getInstance().isManager());
-        edit_ISBN.setVisible(Queries.getInstance().isManager());
+        try {
+            initComponents();
+            user_profile.setText(Queries.getInstance().getUsername());
+            manager_panel.setVisible(Queries.getInstance().isManager());
+            edit_book_lbl.setVisible(Queries.getInstance().isManager());
+            edit_book_btn.setVisible(Queries.getInstance().isManager());
+            edit_ISBN.setVisible(Queries.getInstance().isManager());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -161,17 +170,18 @@ public class Search extends javax.swing.JFrame {
                     .addComponent(search_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(cart_ISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edit_book_lbl)
+                        .addComponent(edit_ISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(edit_book_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(cart_ISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(cart_quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cart_add_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(edit_book_lbl)
-                            .addComponent(edit_ISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(edit_book_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(cart_add_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -309,48 +319,54 @@ public class Search extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_btnActionPerformed
-        String search_word = this.search_field.getText();
-        String selected_search_by = this.search_by.getSelectedItem().toString();
-        String query;
-        switch(selected_search_by){
-            case "ISBN": 
-                query = "SELECT * FROM books WHERE ISBN = \"" + search_word + "\"";
-                break;
-            case "Title":
-                query = "SELECT * FROM books WHERE title = \"" + search_word + "\"";
-                break;
-            case "Category":
-                query = "SELECT * FROM books WHERE category = \"" + search_word + "\"";
-                break;
-            case "Author":
-                query = "SELECT * FROM books WHERE ISBN = (SELECT ISBN FROM book_authors join authors WHERE name = \"" + search_word + "\" and  author_id = id)";
-                break;
-            case "Publisher":
-                query = "SELECT * FROM books WHERE publisher_name = \"" + search_word + "\"";
-                break;
-            default:
-                query = "SELECT * FROM books";
-                break;
-        }
-        Queries q = Queries.getInstance();
-        ArrayList<Book> books = q.select_books(query);
-        System.out.println(books.size());
-        Object[] row = new Object[8];
-        int rows_count = this.books_table.getModel().getRowCount();
-        for(int i = 0; i < rows_count; i++){
-            ((DefaultTableModel)this.books_table.getModel()).removeRow(0);
-        }
-        for(Book b : books){
-            System.out.println(b.getIsbn());
-            row[0] = b.getIsbn();
-            row[1] = b.getTitle();
-            row[2] = b.getPublisher();
-            row[3] = b.getPublication();
-            row[4] = b.getCategory();
-            row[5] = b.getPrice();
-            row[6] = b.getCopies();
-            row[7] = b.getThreshold();
-            ((DefaultTableModel)this.books_table.getModel()).addRow(row);
+        try {
+            String search_word = this.search_field.getText();
+            String selected_search_by = this.search_by.getSelectedItem().toString();
+            String query;
+            switch(selected_search_by){
+                case "ISBN":
+                    query = "SELECT * FROM books WHERE ISBN = \"" + search_word + "\"";
+                    break;
+                case "Title":
+                    query = "SELECT * FROM books WHERE title = \"" + search_word + "\"";
+                    break;
+                case "Category":
+                    query = "SELECT * FROM books WHERE category = \"" + search_word + "\"";
+                    break;
+                case "Author":
+                    query = "SELECT * FROM books WHERE ISBN = (SELECT ISBN FROM book_authors join authors WHERE name = \"" + search_word + "\" and  author_id = id)";
+                    break;
+                case "Publisher":
+                    query = "SELECT * FROM books WHERE publisher_name = \"" + search_word + "\"";
+                    break;
+                default:
+                    query = "SELECT * FROM books";
+                    break;
+            }
+            Queries q = Queries.getInstance();
+            ArrayList<Book> books = q.select_books(query);
+            System.out.println(books.size());
+            Object[] row = new Object[8];
+            int rows_count = this.books_table.getModel().getRowCount();
+            for(int i = 0; i < rows_count; i++){
+                ((DefaultTableModel)this.books_table.getModel()).removeRow(0);
+            }
+            for(Book b : books){
+                System.out.println(b.getIsbn());
+                row[0] = b.getIsbn();
+                row[1] = b.getTitle();
+                row[2] = b.getPublisher();
+                row[3] = b.getPublication();
+                row[4] = b.getCategory();
+                row[5] = b.getPrice();
+                row[6] = b.getCopies();
+                row[7] = b.getThreshold();
+                ((DefaultTableModel)this.books_table.getModel()).addRow(row);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -363,24 +379,45 @@ public class Search extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        this.dispose();
-        //show login
-        String query = "DELETE FROM carts WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
-        Queries.getInstance().setUsername("");
-        String error = Queries.getInstance().modify(query);
-        error_lbl.setText(error);
+        try {
+            //show login
+            String query = "DELETE FROM carts WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
+            Queries.getInstance().setUsername("");
+            String error = Queries.getInstance().modify(query);
+            if (error.isEmpty()){
+                Queries.getInstance().closeCon();
+                System.exit(0);
+            }
+            error_lbl.setText(error);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void cart_add_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cart_add_btnActionPerformed
-        String query = "INSERT INTO carts VALUES(\"" + Queries.getInstance().getUsername() + "\", " + cart_ISBN.getText() + ", " + cart_quantity + ")";
-        String error = Queries.getInstance().modify(query);
-        error_lbl.setText(error.isEmpty() ? cart_ISBN.getText() + " Inserted" : error);
+        try {
+            String query = "INSERT INTO carts VALUES(\"" + Queries.getInstance().getUsername() + "\", " + cart_ISBN.getText() + ", " + cart_quantity.getText() + ")";
+            String error = Queries.getInstance().modify(query);
+            error_lbl.setText(error.isEmpty() ? cart_ISBN.getText() + " Inserted" : error);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cart_add_btnActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        this.dispose();
-        Reports r = new Reports();
-        r.setVisible(true);
+        try {
+            this.dispose();
+            Reports r = new Reports();
+            r.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void add_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_book_btnActionPerformed
@@ -396,15 +433,27 @@ public class Search extends javax.swing.JFrame {
     }//GEN-LAST:event_edit_book_btnActionPerformed
 
     private void user_profileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user_profileMouseClicked
-        EditUser u = new EditUser();
-        this.dispose();
-        u.setVisible(true);
+        try {
+            EditUser u = new EditUser();
+            this.dispose();
+            u.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_user_profileMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        this.dispose();
-        Orders o = new Orders();
-        o.setVisible(true);
+        try {
+            this.dispose();
+            Orders o = new Orders();
+            o.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -468,7 +517,6 @@ public class Search extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel manager_panel;

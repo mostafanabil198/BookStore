@@ -18,6 +18,7 @@ public class Queries {
     private static Queries instance = null;
     private String username;
     private boolean manager;
+    private static Connection conn = null;
 
     public String getUsername() {
         return username;
@@ -38,27 +39,33 @@ public class Queries {
         
     }
     
-    public static Queries getInstance(){
+    public static Queries getInstance() throws ClassNotFoundException, SQLException{
         if (instance == null){
+            conn=get_connection();
             instance = new Queries();
         }
         return instance;
     }
-
     
-    private Connection get_connection() throws ClassNotFoundException, SQLException{
-        String myDriver = "org.gjt.mm.mysql.Driver";
-        String myUrl = "jdbc:mysql://localhost/BookStore";
-        Class.forName("org.gjt.mm.mysql.Driver");
-        Connection con = DriverManager.getConnection(myUrl, "root", "password");
-        return con;
+    public void closeCon() throws SQLException{
+        conn.close();
     }
 
+    
+    private static Connection get_connection() throws ClassNotFoundException, SQLException{
+        if (conn == null) {
+            String myDriver = "org.gjt.mm.mysql.Driver";
+            String myUrl = "jdbc:mysql://localhost/BookStore";
+            Class.forName("org.gjt.mm.mysql.Driver");
+            conn = DriverManager.getConnection(myUrl, "root", "password");
+        }
+        return conn;
+    }
+    
     public String modify(String query) {
         String error = "";
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -77,7 +84,6 @@ public class Queries {
         Book b = null;
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -86,6 +92,7 @@ public class Queries {
             while (rs.next()) {
                 b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getInt("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -100,7 +107,6 @@ public class Queries {
         User u = null;
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -109,6 +115,7 @@ public class Queries {
             while (rs.next()) {
                 u = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("password"), rs.getInt("manager"), rs.getString("phone"), rs.getString("address"));
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -121,7 +128,6 @@ public class Queries {
         ArrayList<Book> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -131,6 +137,7 @@ public class Queries {
                 Book b = new Book(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getInt("publication_year"), rs.getString("category"), rs.getInt("copies_no"), rs.getInt("threshold"), rs.getFloat("price"));
                 list.add(b);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -143,7 +150,6 @@ public class Queries {
         ArrayList<CartItem> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -153,6 +159,7 @@ public class Queries {
                 CartItem b = new CartItem(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("category"), rs.getInt("copies_no"), rs.getFloat("price"), rs.getInt("quantity"));
                 list.add(b);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -165,7 +172,6 @@ public class Queries {
         ArrayList<BookOrder> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -175,6 +181,7 @@ public class Queries {
                 BookOrder order = new BookOrder(rs.getInt("ISBN"), rs.getDate("date"), rs.getInt("quantity"));
                 list.add(order);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -186,16 +193,16 @@ public class Queries {
         ArrayList<User> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
             ResultSet rs = st.executeQuery(query);
             // iterate through the java resultset
             while (rs.next()) {
-                User order = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"),rs.getString("second_name"));
+                User order = new User(rs.getString("username"), rs.getString("email"), rs.getString("first_name"),rs.getString("last_name"));
                 list.add(order);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -208,7 +215,6 @@ public class Queries {
         boolean valid = false;
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -217,6 +223,7 @@ public class Queries {
             while (rs.next()) {
                 valid = true;
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -226,14 +233,18 @@ public class Queries {
     }
     
     public boolean checkout(String query) {
-        boolean rs = false;
+        boolean rs = true;
+        
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
+            conn.setAutoCommit(false);
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
-            rs = st.execute(query);
+            String[] queries = query.split(";");
+            for(String s : queries) rs = rs && st.execute(s);
+            conn.commit();
+            conn.setAutoCommit(true);
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -246,7 +257,6 @@ public class Queries {
         float total = 0;
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -255,6 +265,7 @@ public class Queries {
             while (rs.next()) {
                 total = rs.getFloat("SUM(quantity)");
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -267,7 +278,6 @@ public class Queries {
         ArrayList<String> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -277,6 +287,7 @@ public class Queries {
                 String s = rs.getString("username");
                 list.add(s);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -289,7 +300,6 @@ public class Queries {
         ArrayList<String> list = new ArrayList<>();
         try {
             // create our mysql database connection
-            Connection conn = get_connection();
             // create the java statement
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
@@ -299,6 +309,7 @@ public class Queries {
                 String s = rs.getString("title");
                 list.add(s);
             }
+            rs.close();
             st.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");

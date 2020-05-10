@@ -5,6 +5,10 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author elshamey
@@ -127,26 +131,32 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordTfActionPerformed
 
     private void lognBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lognBActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String query = "select * from `BookStore`.`users` where email = "
-                +"'"+emailTf.getText()+"'" + " and password = " +"'"+ passwordTf.getText()
-                + "';" ;
-        try {
-            User u = q.selectUser(query);
-            Queries.getInstance().setUsername(u.getUserName());
-            boolean b;
-            if(u.getManager() == 0)
-                b = false;
-            else
-                b = true;
-            Queries.getInstance().setManager(b);
-            Search s = new Search();
-            s.setVisible(true);
-        } catch (Exception e) {
-            errorlabel.setText("WRONG EMAIL OR PASSWORD");
+        try {                                      
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String query = "select * from `BookStore`.`users` where email = "
+                    +"'"+emailTf.getText()+"'" + " and password = " +"'"+ passwordTf.getText()
+                    + "';" ;
+            try {
+                User u = q.selectUser(query);
+                Queries.getInstance().setUsername(u.getUserName());
+                boolean b;
+                if(u.getManager() == 0)
+                    b = false;
+                else
+                    b = true;
+                Queries.getInstance().setManager(b);
+                Search s = new Search();
+                s.setVisible(true);
+            } catch (Exception e) {
+                errorlabel.setText("WRONG EMAIL OR PASSWORD");
+            }
+            this.dispose();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.dispose();
     }//GEN-LAST:event_lognBActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

@@ -6,10 +6,13 @@
 package bookstore;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import static java.time.Instant.now;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,12 +24,12 @@ public class Orders extends javax.swing.JFrame {
     /**
      * Creates new form Orders
      */
-    public Orders() {
+    public Orders() throws ClassNotFoundException, SQLException {
         initComponents();
         showOrders();
     }
     
-    void showOrders(){
+    void showOrders() throws ClassNotFoundException, SQLException{
         Queries q = Queries.getInstance();
         String query = "SELECT * FROM book_orders";
         ArrayList<BookOrder> books_orders = q.select_books_orders(query);
@@ -238,16 +241,22 @@ public class Orders extends javax.swing.JFrame {
     }//GEN-LAST:event_orderIsbnActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-         String ISBN= this.orderIsbn.getText();
-          Queries q = Queries.getInstance();
-          String query = "DELETE FROM book_orders WHERE ISBN="+ISBN;
-          String error = q.modify(query);
-          if(error.isEmpty()){
-              this.response_msg.setText(error);
-          }else{
-              showOrders();
-              this.response_msg.setText("order confirmed");
-          }
+        try {
+            String ISBN= this.orderIsbn.getText();
+            Queries q = Queries.getInstance();
+            String query = "DELETE FROM book_orders WHERE ISBN="+ISBN;
+            String error = q.modify(query);
+            if(!error.isEmpty()){
+                this.response_msg.setText(error);
+            }else{
+                showOrders();
+                this.response_msg.setText("order confirmed");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void ISBNPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ISBNPlaceActionPerformed
@@ -255,37 +264,49 @@ public class Orders extends javax.swing.JFrame {
     }//GEN-LAST:event_ISBNPlaceActionPerformed
 
     private void PlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlaceOrderActionPerformed
-        String ISBN= this.ISBNPlace.getText();
-        String quanitiy= this.QuantityPlace.getText();
-         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-          LocalDateTime now = LocalDateTime.now();
-          System.out.println(dtf.format(now));
-          String query = "INSERT INTO book_orders VALUES("+ISBN+",'"+dtf.format(now) +"',"+quanitiy+")";
-          System.out.println(query);
-          String error = Queries.getInstance().modify(query);
-          if(error.isEmpty()){
-              this.response_msg.setText(error);
-          }else{
-              showOrders();
-              this.response_msg.setText("order placed");
-          }
-          showOrders();
+        try {
+            String ISBN= this.ISBNPlace.getText();
+            String quanitiy= this.QuantityPlace.getText();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            System.out.println(dtf.format(now));
+            String query = "INSERT INTO book_orders VALUES("+ISBN+",'"+dtf.format(now) +"',"+quanitiy+")";
+            System.out.println(query);
+            String error = Queries.getInstance().modify(query);
+            if(!error.isEmpty()){
+                this.response_msg.setText(error);
+            }else{
+                showOrders();
+                this.response_msg.setText("order placed");
+            }
+            showOrders();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_PlaceOrderActionPerformed
 
     private void UpdateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateOrderActionPerformed
-        String ISBN= this.ISBNPlace.getText();
-        String quanitiy= this.QuantityPlace.getText();
-         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-          LocalDateTime now = LocalDateTime.now();
-          String query = "UPDATE book_orders SET date='"+dtf.format(now) +"', set quantity="+quanitiy+" WHERE ISBN="+ISBN;
-          String error = Queries.getInstance().modify(query);
-          if(error.isEmpty()){
-              this.response_msg.setText(error);
-          }else{
-              showOrders();
-              this.response_msg.setText("order updated");
-          }
-          showOrders();
+        try {
+            String ISBN= this.ISBNPlace.getText();
+            String quanitiy= this.QuantityPlace.getText();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            String query = "UPDATE book_orders SET date='"+dtf.format(now) +"', quantity="+quanitiy+" WHERE ISBN="+ISBN;
+            String error = Queries.getInstance().modify(query);
+            if(!error.isEmpty()){
+                this.response_msg.setText(error);
+            }else{
+                showOrders();
+                this.response_msg.setText("order updated");
+            }
+            showOrders();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_UpdateOrderActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -324,7 +345,13 @@ public class Orders extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Orders().setVisible(true);
+                try {
+                    new Orders().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

@@ -5,9 +5,12 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -114,18 +117,35 @@ public class Checkout extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String query = "Select card_no FROM credit_cards WHERE card_no = \"" + card_no.getText() + "\" AND expiry_date = \"" + expiry_date.getText() + "\"";
-        if(Queries.getInstance().checkCreditCard(query)){
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime now = LocalDateTime.now();
-            query = "START TRANSACTION;SET autocommit = OFF;";
-            for(CartItem c : cartItem){
-                query += "UPDATE books SET copies_no = copies_no -" + c.getQuantity() + " WHERE ISBN = " + c.getIsbn() + ";";
-                query += "INSERT INTO sales VALUES(\"" + Queries.getInstance().getUsername() + "\", " + c.getIsbn() + ", " + c.getQuantity() + ", '" + dtf.format(now) +"', " + c.getQuantity() * c.getPrice() + ");";
+        try {
+            if(Queries.getInstance().checkCreditCard(query)){
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDateTime now = LocalDateTime.now();
+                query = "";
+                for(CartItem c : cartItem){
+                    query += "UPDATE books SET copies_no = (copies_no - " + c.getQuantity() + ") WHERE ISBN = " + c.getIsbn() + ";";
+                    query += "INSERT INTO sales(`username`,`ISBN`,`quantity`,`date`,`total_price`) VALUES(\"" + Queries.getInstance().getUsername() + "\", " + c.getIsbn() + ", " + c.getQuantity() + ", '" + dtf.format(now) +"', " + c.getQuantity() * c.getPrice() + ");";
+                }
+                query +=  "DELETE FROM carts WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
+                System.out.println(query);
             }
-            query +=  "COMMIT;";
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Checkout.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Checkout.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (!Queries.getInstance().checkout(query)){
-            error_lbl.setText("More than available quantity");
+        try {
+          if(!Queries.getInstance().checkout(query)){
+                error_lbl.setText("More than available quantity");
+            } else {
+              this.dispose();
+              Cart c = new Cart();
+              c.setVisible(true);
+          }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Checkout.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Checkout.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

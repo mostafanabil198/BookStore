@@ -26,9 +26,28 @@ public class AddBook extends javax.swing.JFrame {
         if(isbn == -1)
         {
             updateButton.setVisible(false);
-            seletButton.setVisible(false);
         } else {
             addButton.setVisible(false);
+            try {
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String query = "select * from books where ISBN = " + isbn+";";
+            Book b = new Book();
+            b = q.select(query);
+            isbnTextField.setText(""+b.getIsbn());
+            titleTextField.setText(b.getTitle());
+            publisherTextField.setText(b.getPublisher());
+            publicationTextField.setText(String.valueOf(b.getPublication()));
+            priceTextField.setText(""+b.getPrice());
+            categoryTextField.setText(b.getCategory());
+            copiesTextField.setText(""+b.getCopies());
+            thresholdTextField.setText(""+b.getThreshold());
+            isbnTextField.setEditable(false);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
     }
 
@@ -65,7 +84,6 @@ public class AddBook extends javax.swing.JFrame {
         addButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
-        seletButton = new javax.swing.JToggleButton();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -136,15 +154,6 @@ public class AddBook extends javax.swing.JFrame {
 
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
 
-        seletButton.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        seletButton.setForeground(new java.awt.Color(0, 0, 255));
-        seletButton.setText("SELECT");
-        seletButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                seletButtonActionPerformed(evt);
-            }
-        });
-
         jButton1.setText("Back");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,8 +215,6 @@ public class AddBook extends javax.swing.JFrame {
                 .addContainerGap(59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(seletButton)
-                .addGap(18, 18, 18)
                 .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(updateButton)
@@ -257,8 +264,7 @@ public class AddBook extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
-                    .addComponent(updateButton)
-                    .addComponent(seletButton))
+                    .addComponent(updateButton))
                 .addGap(22, 22, 22))
         );
 
@@ -278,9 +284,10 @@ public class AddBook extends javax.swing.JFrame {
     }//GEN-LAST:event_publicationTextFieldActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String query = "";
+        try {
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String query = "";
             query = "insert into `BookStore`.`books` (ISBN,`title`,"
                     + "`publisher_name`,publication_year,price,`category`,"
                     + "copies_no,threshold) values("
@@ -292,41 +299,47 @@ public class AddBook extends javax.swing.JFrame {
                     + ",'" + categoryTextField.getText()
                     + "'," + Integer.valueOf(copiesTextField.getText())
                     + "," + Integer.valueOf(thresholdTextField.getText()) + ");";
-            errorLabel.setText(q.modify(query));
+            String error = q.modify(query);
+            if(error.isEmpty()){
+               this.dispose();
+               Search s = new Search();
+               s.setVisible(true);
+            }
+            errorLabel.setText(error);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
  
 
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String q1 = "update `BookStore`.`books` set title = '"+titleTextField.getText()+"',"+
-                "publisher_name = '"+publisherTextField.getText()+"',"+
-                "publication_year = '"+publicationTextField.getText()+"',"+
-                "price = "+priceTextField.getText()+","+
-                "category = '"+categoryTextField.getText()+"',"+
-                "copies_no = "+copiesTextField.getText()+","+
-                "threshold = " + thresholdTextField.getText()+
-                " where isbn =" + isbn + ";";
-        errorLabel.setText(q.modify(q1));
+        try {
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String q1 = "update `BookStore`.`books` set title = '"+titleTextField.getText()+"',"+
+                    "publisher_name = '"+publisherTextField.getText()+"',"+
+                    "publication_year = '"+publicationTextField.getText()+"',"+
+                    "price = "+priceTextField.getText()+","+
+                    "category = '"+categoryTextField.getText()+"',"+
+                    "copies_no = "+copiesTextField.getText()+","+
+                    "threshold = " + thresholdTextField.getText()+
+                    " where isbn =" + isbn + ";";
+            String error = q.modify(q1);
+            if(error.isEmpty()){
+               this.dispose();
+               Search s = new Search();
+               s.setVisible(true);
+            }
+            errorLabel.setText(error);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_updateButtonActionPerformed
-
-    private void seletButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seletButtonActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String query = "select * from books where ISBN = " + isbn+";";
-        Book b = new Book();
-        b = q.select(query);
-        isbnTextField.setText(""+b.getIsbn());
-        titleTextField.setText(b.getTitle());
-        publisherTextField.setText(b.getPublisher());
-        publicationTextField.setText(String.valueOf(b.getPublication()));
-        priceTextField.setText(""+b.getPrice());
-        categoryTextField.setText(b.getCategory());
-        copiesTextField.setText(""+b.getCopies());
-        thresholdTextField.setText(""+b.getThreshold());
-        isbnTextField.setEditable(false);
-    }//GEN-LAST:event_seletButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Search s = new Search();
@@ -388,7 +401,6 @@ public class AddBook extends javax.swing.JFrame {
     private javax.swing.JTextField priceTextField;
     private javax.swing.JTextField publicationTextField;
     private javax.swing.JTextField publisherTextField;
-    private javax.swing.JToggleButton seletButton;
     private javax.swing.JTextField thresholdTextField;
     private javax.swing.JTextField titleTextField;
     private javax.swing.JButton updateButton;

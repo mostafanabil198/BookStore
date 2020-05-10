@@ -5,7 +5,10 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,27 +27,34 @@ public class Cart extends javax.swing.JFrame {
     }
     ArrayList<CartItem> books;
     private void fillCart(){
-        String query = "SELECT b.ISBN, b.title, b.publisher_name, b.price, b.copies_no, c.quantity FROM books AS b NATURAL JOIN carts AS c WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
-        Queries q = Queries.getInstance();
-        books = q.select_cart(query);
-        Object[] row = new Object[7];
-        int rows_count = this.books_table.getModel().getRowCount();
-        for(int i = 0; i < rows_count; i++){
-            ((DefaultTableModel)this.books_table.getModel()).removeRow(0);
+        try {
+            String query = "SELECT b.ISBN, b.title, b.publisher_name, b.category, b.price, b.copies_no, c.quantity FROM books AS b NATURAL JOIN carts AS c WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
+            System.out.println(query);
+            Queries q = Queries.getInstance();
+            books = q.select_cart(query);
+            Object[] row = new Object[7];
+            int rows_count = this.books_table.getModel().getRowCount();
+            for(int i = 0; i < rows_count; i++){
+                ((DefaultTableModel)this.books_table.getModel()).removeRow(0);
+            }
+            int total_price = 0;
+            for(CartItem b : books){
+                row[0] = b.getIsbn();
+                row[1] = b.getTitle();
+                row[2] = b.getPublisher();
+                row[3] = b.getCategory();
+                row[4] = b.getPrice();
+                total_price += b.getPrice() * b.getQuantity();
+                row[5] = b.getCopies();
+                row[6] = b.getQuantity();
+                ((DefaultTableModel)this.books_table.getModel()).addRow(row);
+            }
+            total_price_lbl.setText(String.valueOf(total_price));
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Cart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Cart.class.getName()).log(Level.SEVERE, null, ex);
         }
-        int total_price = 0;
-        for(CartItem b : books){
-            row[0] = b.getIsbn();
-            row[1] = b.getTitle();
-            row[2] = b.getPublisher();
-            row[3] = b.getCategory();
-            row[4] = b.getPrice();
-            total_price += b.getPrice();
-            row[5] = b.getCopies();
-            row[6] = b.getQuantity();
-            ((DefaultTableModel)this.books_table.getModel()).addRow(row);
-        }
-        total_price_lbl.setText(String.valueOf(total_price));
     }
 
     /**
@@ -198,12 +208,18 @@ public class Cart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void remove_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remove_btnActionPerformed
-       String book_ISBN = this.ISBN.getText();
-       String query = "DELETE FROM carts WHERE ISBN = " + book_ISBN;
-       Queries q = Queries.getInstance();
-       String error = q.modify(query);
-       this.error_lbl.setText(error);
-       if (error.isEmpty()) fillCart();
+        try {
+            String book_ISBN = this.ISBN.getText();
+            String query = "DELETE FROM carts WHERE ISBN = " + book_ISBN;
+            Queries q = Queries.getInstance();
+            String error = q.modify(query);
+            this.error_lbl.setText(error);
+            if (error.isEmpty()) fillCart();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Cart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Cart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_remove_btnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

@@ -5,6 +5,10 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author elshamey
@@ -193,9 +197,10 @@ public class Signup extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sinupBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sinupBActionPerformed
-        // TODO add your handling code here:
-        Queries q = Queries.getInstance();
-        String query = "";
+        try {
+            // TODO add your handling code here:
+            Queries q = Queries.getInstance();
+            String query = "";
             query = "insert into `BookStore`.`users` (`username`,`email`,"
                     + "`first_name`,`last_name`,`password`,manager,"
                     + "`phone`,`address`) values("
@@ -214,9 +219,14 @@ public class Signup extends javax.swing.JFrame {
                 Search s = new Search();
                 s.setVisible(true);
             }
-        this.dispose();
-        Search s = new Search();
-        s.setVisible(true);
+            this.dispose();
+            Search s = new Search();
+            s.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_sinupBActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed

@@ -5,7 +5,10 @@
  */
 package bookstore;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -67,7 +70,7 @@ public class PromoteUsers extends javax.swing.JFrame {
 
             },
             new String [] {
-                "user name", "email", "first name", "second name"
+                "user name", "email", "first name", "last name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -137,33 +140,45 @@ public class PromoteUsers extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        String username=this.username.getText();
-        String query = "SELECT * FROM users WHERE username like \"%" + username + "%\" AND manager = 0";
-        ArrayList<User> users = Queries.getInstance().select_User_to_promote(query);
-        Object[] row = new Object[4];
-        int rows_count = this.users_promote_table.getModel().getRowCount();
-        for(int i = 0; i < rows_count; i++){
-            ((DefaultTableModel)this.users_promote_table.getModel()).removeRow(0);
-        }
-        for(User b : users){
-            row[0] = b.getUserName();
-            row[1] = b.getEmail();
-            row[2] = b.getFirstName();
-            row[3] = b.getSecondName();
-            ((DefaultTableModel)this.users_promote_table.getModel()).addRow(row);
+        try {
+            String username=this.username.getText();
+            String query = "SELECT * FROM users WHERE username like \"%" + username + "%\" AND manager = 0";
+            ArrayList<User> users = Queries.getInstance().select_User_to_promote(query);
+            Object[] row = new Object[4];
+            int rows_count = this.users_promote_table.getModel().getRowCount();
+            for(int i = 0; i < rows_count; i++){
+                ((DefaultTableModel)this.users_promote_table.getModel()).removeRow(0);
+            }
+            for(User b : users){
+                row[0] = b.getUserName();
+                row[1] = b.getEmail();
+                row[2] = b.getFirstName();
+                row[3] = b.getSecondName();
+                ((DefaultTableModel)this.users_promote_table.getModel()).addRow(row);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PromoteUsers.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PromoteUsers.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_searchActionPerformed
 
     private void promoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promoteActionPerformed
-        String username=this.username.getText();
-        String query = "UPDATE users SET manager = 1 WHERE username="+username;
-        String error= Queries.getInstance().modify(query);
-        if(error.isEmpty()){
-              this.response_msg.setText(error);
-          }else{
-              this.response_msg.setText(username +"became a manager");
-          }
+        try {
+            String username=this.username.getText();
+            String query = "UPDATE users SET manager = 1 WHERE username=\""+username+"\"";
+            String error= Queries.getInstance().modify(query);
+            if(!error.isEmpty()){
+                this.response_msg.setText(error);
+            }else{
+                this.response_msg.setText(username +" became a manager");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PromoteUsers.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PromoteUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_promoteActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
