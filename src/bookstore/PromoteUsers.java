@@ -167,12 +167,18 @@ public class PromoteUsers extends javax.swing.JFrame {
     private void promoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promoteActionPerformed
         try {
             String username=this.username.getText();
+            String select_query = "SELECT COUNT(username) from users where username =\""+username+"\"";
+            boolean userExist= Queries.getInstance().checkUserExist(select_query);
+            if(userExist){
             String query = "UPDATE users SET manager = 1 WHERE username=\""+username+"\"";
             String error= Queries.getInstance().modify(query);
             if(!error.isEmpty()){
                 this.response_msg.setText(error);
             }else{
                 this.response_msg.setText(username +" became a manager");
+            }
+            }else{
+                this.response_msg.setText(username+" doesn't exist in the system");
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PromoteUsers.class.getName()).log(Level.SEVERE, null, ex);
