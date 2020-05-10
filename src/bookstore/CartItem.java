@@ -29,6 +29,10 @@ public class CartItem {
         this.quantity = quantity;
     }
     
+    public void addQuantity(int quantity){
+        this.quantity += quantity;
+    }
+    
     public int getIsbn() {
         return isbn;
     }

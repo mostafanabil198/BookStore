@@ -28,10 +28,10 @@ public class Cart extends javax.swing.JFrame {
     ArrayList<CartItem> books;
     private void fillCart(){
         try {
-            String query = "SELECT b.ISBN, b.title, b.publisher_name, b.category, b.price, b.copies_no, c.quantity FROM books AS b NATURAL JOIN carts AS c WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
-            System.out.println(query);
+//            String query = "SELECT b.ISBN, b.title, b.publisher_name, b.category, b.price, b.copies_no, c.quantity FROM books AS b NATURAL JOIN carts AS c WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
+//            System.out.println(query);
             Queries q = Queries.getInstance();
-            books = q.select_cart(query);
+            books = q.getCart();
             Object[] row = new Object[7];
             int rows_count = this.books_table.getModel().getRowCount();
             for(int i = 0; i < rows_count; i++){
@@ -210,9 +210,9 @@ public class Cart extends javax.swing.JFrame {
     private void remove_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remove_btnActionPerformed
         try {
             String book_ISBN = this.ISBN.getText();
-            String query = "DELETE FROM carts WHERE ISBN = " + book_ISBN;
+//            String query = "DELETE FROM carts WHERE ISBN = " + book_ISBN;
             Queries q = Queries.getInstance();
-            String error = q.modify(query);
+            String error = q.removeFromCart(Integer.parseInt(book_ISBN));
             this.error_lbl.setText(error);
             if (error.isEmpty()) fillCart();
         } catch (ClassNotFoundException ex) {

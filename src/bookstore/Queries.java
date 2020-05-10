@@ -7,7 +7,6 @@ package bookstore;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  *
@@ -19,6 +18,36 @@ public class Queries {
     private String username;
     private boolean manager;
     private static Connection conn = null;
+    private ArrayList<CartItem> cart;
+    
+    public ArrayList<CartItem> getCart(){
+        return cart;
+    }
+    
+    public void addToCart(CartItem c) {
+        for(CartItem ci : cart){
+            if(ci.getIsbn() == c.getIsbn()){
+                ci.addQuantity(c.getQuantity());
+                return;
+            }
+        }
+        cart.add(c);
+    }
+    
+    public String removeFromCart(int isbn){
+        for(CartItem ci : cart){
+            if(ci.getIsbn() == isbn){
+                cart.remove(ci);
+                return "";
+            }
+        }
+        return "Wrong ISBN, Not in cart!";
+    }
+    
+    public void emptyCart(){
+        cart.clear();
+    }
+    
 
     public String getUsername() {
         return username;
@@ -36,7 +65,7 @@ public class Queries {
         this.manager = manager;
     }
     private Queries(){
-        
+        cart = new ArrayList<>();
     }
     
     public static Queries getInstance() throws ClassNotFoundException, SQLException{
@@ -146,8 +175,8 @@ public class Queries {
         return list;
     }
     
-    public ArrayList<CartItem> select_cart(String query) {
-        ArrayList<CartItem> list = new ArrayList<>();
+    public CartItem select_cart(String query, int quantity) {
+        CartItem item = null;
         try {
             // create our mysql database connection
             // create the java statement
@@ -156,8 +185,7 @@ public class Queries {
             ResultSet rs = st.executeQuery(query);
             // iterate through the java resultset
             while (rs.next()) {
-                CartItem b = new CartItem(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("category"), rs.getInt("copies_no"), rs.getFloat("price"), rs.getInt("quantity"));
-                list.add(b);
+                item = new CartItem(rs.getInt("ISBN"), rs.getString("title"), rs.getString("publisher_name"), rs.getString("category"), rs.getInt("copies_no"), rs.getFloat("price"), quantity);
             }
             rs.close();
             st.close();
@@ -165,7 +193,7 @@ public class Queries {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }
-        return list;
+        return item;
     }
     
     public ArrayList<BookOrder> select_books_orders(String query) {
@@ -242,11 +270,15 @@ public class Queries {
             Statement st = (Statement) conn.createStatement();
             // execute the query, and get a java resultset
             String[] queries = query.split(";");
-            for(String s : queries) rs = rs && st.execute(s);
+            for(String s : queries){
+                st.execute(s);
+                System.out.println("--" + s);
+            }
             conn.commit();
             conn.setAutoCommit(true);
             st.close();
         } catch (Exception e) {
+            rs = false;
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }

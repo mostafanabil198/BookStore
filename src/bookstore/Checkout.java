@@ -126,8 +126,9 @@ public class Checkout extends javax.swing.JFrame {
                     query += "UPDATE books SET copies_no = (copies_no - " + c.getQuantity() + ") WHERE ISBN = " + c.getIsbn() + ";";
                     query += "INSERT INTO sales(`username`,`ISBN`,`quantity`,`date`,`total_price`) VALUES(\"" + Queries.getInstance().getUsername() + "\", " + c.getIsbn() + ", " + c.getQuantity() + ", '" + dtf.format(now) +"', " + c.getQuantity() * c.getPrice() + ");";
                 }
-                query +=  "DELETE FROM carts WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
-                System.out.println(query);
+            } else {
+                error_lbl.setText("Wrong Credit Card!");
+                return;
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Checkout.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,6 +139,7 @@ public class Checkout extends javax.swing.JFrame {
           if(!Queries.getInstance().checkout(query)){
                 error_lbl.setText("More than available quantity");
             } else {
+              Queries.getInstance().emptyCart();
               this.dispose();
               Cart c = new Cart();
               c.setVisible(true);

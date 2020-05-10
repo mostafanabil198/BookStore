@@ -398,9 +398,15 @@ public class Search extends javax.swing.JFrame {
 
     private void cart_add_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cart_add_btnActionPerformed
         try {
-            String query = "INSERT INTO carts VALUES(\"" + Queries.getInstance().getUsername() + "\", " + cart_ISBN.getText() + ", " + cart_quantity.getText() + ")";
-            String error = Queries.getInstance().modify(query);
-            error_lbl.setText(error.isEmpty() ? cart_ISBN.getText() + " Inserted" : error);
+//            String query = "INSERT INTO carts VALUES(\"" + Queries.getInstance().getUsername() + "\", " + cart_ISBN.getText() + ", " + cart_quantity.getText() + ")";
+            String query = "SELECT b.ISBN, b.title, b.publisher_name, b.category, b.price, b.copies_no FROM books AS b WHERE ISBN = " + cart_ISBN.getText();
+            CartItem item = Queries.getInstance().select_cart(query, Integer.parseInt(cart_quantity.getText()));
+            if(item != null){
+                error_lbl.setText(cart_ISBN.getText() + " ISBN Inserted");
+                Queries.getInstance().addToCart(item);
+            } else{
+                error_lbl.setText("No Book with This ISBN");
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
