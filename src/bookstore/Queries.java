@@ -317,5 +317,25 @@ public class Queries {
         }
         return list;
     }
+     public boolean checkUserExist(String query){
+        boolean Exist = false;
+        try {
+            // create our mysql database connection
+            // create the java statement
+            Statement st = (Statement) conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+                Exist = true;
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return Exist;
+    }
 
 }
