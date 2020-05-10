@@ -381,14 +381,8 @@ public class Search extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         try {
             //show login
-            String query = "DELETE FROM carts WHERE username = \"" + Queries.getInstance().getUsername() + "\"";
-            Queries.getInstance().setUsername("");
-            String error = Queries.getInstance().modify(query);
-            if (error.isEmpty()){
                 Queries.getInstance().closeCon();
                 System.exit(0);
-            }
-            error_lbl.setText(error);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

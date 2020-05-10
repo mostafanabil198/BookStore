@@ -320,32 +320,31 @@ public class AddBook extends javax.swing.JFrame {
                     + "'," + Integer.valueOf(copiesTextField.getText())
                     + "," + Integer.valueOf(thresholdTextField.getText()) + ");";
             String error = q.modify(query);
-            
-            
-            
-            String authors = authorTF.getText();
-            String[] all = authors.split(",");
-            String q1 = "";
-            String error2 = "";
-            for(int i = 0;i <all.length;i++)
-            {
-                q1 = "insert into `BookStore`.`authors` (`name`) values ('"
-                        + all[i]+"');";
-                error2 = Queries.getInstance().modify(q1);
-                if(error2 != "")
-                {
-                    errorLabel.setText(errorLabel.getText()+error2);
-                }
-            }
-            
-            
-            
+ 
+           errorLabel.setText(error);
             if(error.isEmpty()){
-               this.dispose();
-               Search s = new Search();
-               s.setVisible(true);
+                String authors = authorTF.getText();
+                String[] all = authors.split(",");
+                String q1 = "";
+                String error2 = "";
+                for(String s : all)
+                {
+                    q1 = "call check_author_exist(\"" + s + "\", " + Integer.valueOf(isbnTextField.getText()) + ");";
+                    error2 += Queries.getInstance().modify(q1);
+                    if(error2 != "")
+                    {
+                        errorLabel.setText(errorLabel.getText()+error2);
+                    }
+                }
+                if(error2.isEmpty())
+                {
+                    this.dispose();
+                    Search se = new Search();
+                    se.setVisible(true);
+                }    
+               
             }
-            errorLabel.setText(errorLabel.getText()+error);
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
