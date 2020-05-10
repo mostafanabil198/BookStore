@@ -260,7 +260,7 @@ public class Queries {
         return valid;
     }
     
-    public boolean checkout(String query) {
+    public boolean checkout(String query) throws SQLException {
         boolean rs = true;
         
         try {
@@ -279,6 +279,7 @@ public class Queries {
             st.close();
         } catch (Exception e) {
             rs = false;
+            conn.rollback();
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }
