@@ -85,6 +85,8 @@ public class AddBook extends javax.swing.JFrame {
         updateButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        authorTF = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,6 +163,15 @@ public class AddBook extends javax.swing.JFrame {
             }
         });
 
+        authorTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                authorTFActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel10.setText("Author(S) :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,7 +186,14 @@ public class AddBook extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(247, 247, 247)
+                                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(updateButton)
+                                    .addGap(85, 85, 85)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +219,11 @@ public class AddBook extends javax.swing.JFrame {
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                     .addComponent(priceTextField)
                                                     .addComponent(copiesTextField)
-                                                    .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                    .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel10)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(authorTF, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel4)
@@ -213,12 +235,6 @@ public class AddBook extends javax.swing.JFrame {
                                             .addComponent(titleTextField)
                                             .addComponent(publisherTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
                 .addContainerGap(59, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(updateButton)
-                .addGap(144, 144, 144))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,13 +275,17 @@ public class AddBook extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addGap(26, 26, 26)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(authorTF, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
                     .addComponent(updateButton))
-                .addGap(22, 22, 22))
+                .addGap(27, 27, 27))
         );
 
         pack();
@@ -300,12 +320,32 @@ public class AddBook extends javax.swing.JFrame {
                     + "'," + Integer.valueOf(copiesTextField.getText())
                     + "," + Integer.valueOf(thresholdTextField.getText()) + ");";
             String error = q.modify(query);
+            
+            
+            
+            String authors = authorTF.getText();
+            String[] all = authors.split(",");
+            String q1 = "";
+            String error2 = "";
+            for(int i = 0;i <all.length;i++)
+            {
+                q1 = "insert into `BookStore`.`authors` (`name`) values ('"
+                        + all[i]+"');";
+                error2 = Queries.getInstance().modify(q1);
+                if(error2 != "")
+                {
+                    errorLabel.setText(errorLabel.getText()+error2);
+                }
+            }
+            
+            
+            
             if(error.isEmpty()){
                this.dispose();
                Search s = new Search();
                s.setVisible(true);
             }
-            errorLabel.setText(error);
+            errorLabel.setText(errorLabel.getText()+error);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(AddBook.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -347,6 +387,10 @@ public class AddBook extends javax.swing.JFrame {
         s.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void authorTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authorTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_authorTFActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -384,12 +428,14 @@ public class AddBook extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JTextField authorTF;
     private javax.swing.JTextField categoryTextField;
     private javax.swing.JTextField copiesTextField;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField isbnTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

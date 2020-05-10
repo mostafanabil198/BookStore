@@ -23,8 +23,12 @@ public class BookStore {
         //String x[][] = {{"x","q"},{"z","w"}};
           //Search s = new Search();
           //s.setVisible(true);
-        First f =new First();
-        f.setVisible(true);
+        //First f =new First();
+        //f.setVisible(true);
+        
+        
+        AddBook a = new AddBook(-1);
+        a.setVisible(true);
         
             //EditUser e = new EditUser(0);
             //e.setVisible(true);
