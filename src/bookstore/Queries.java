@@ -86,7 +86,7 @@ public class Queries {
             String myDriver = "org.gjt.mm.mysql.Driver";
             String myUrl = "jdbc:mysql://localhost/BookStore";
             Class.forName("org.gjt.mm.mysql.Driver");
-            conn = DriverManager.getConnection(myUrl, "root", "password");
+            conn = DriverManager.getConnection(myUrl, "root", "alahly1907mohamed");
         }
         return conn;
     }
