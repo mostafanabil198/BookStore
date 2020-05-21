@@ -148,14 +148,14 @@ public class Login extends javax.swing.JFrame {
                 Queries.getInstance().setManager(b);
                 Search s = new Search();
                 s.setVisible(true);
+                this.dispose();
             } catch (Exception e) {
                 errorlabel.setText("WRONG EMAIL OR PASSWORD");
             }
-            this.dispose();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            errorlabel.setText("WRONG EMAIL OR PASSWORD");
         }
     }//GEN-LAST:event_lognBActionPerformed
 
